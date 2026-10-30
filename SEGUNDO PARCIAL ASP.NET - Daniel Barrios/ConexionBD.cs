@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -33,7 +33,10 @@ namespace SEGUNDO_PARCIAL_ASP.NET___Daniel_Barrios
                 {
                     if (parametros != null)
                     {
-                        cmd.Parameters.AddRange(parametros);
+                        foreach (SqlParameter p in parametros)
+                        {
+                            cmd.Parameters.Add(new SqlParameter(p.ParameterName, p.Value));
+                        }
                     }
                     using (SqlDataAdapter da = new SqlDataAdapter(cmd))
                     {
@@ -53,7 +56,10 @@ namespace SEGUNDO_PARCIAL_ASP.NET___Daniel_Barrios
                 {
                     if (parametros != null)
                     {
-                        cmd.Parameters.AddRange(parametros);
+                        foreach (SqlParameter p in parametros)
+                        {
+                            cmd.Parameters.Add(new SqlParameter(p.ParameterName, p.Value));
+                        }
                     }
                     con.Open();
                     return cmd.ExecuteNonQuery();
@@ -69,7 +75,10 @@ namespace SEGUNDO_PARCIAL_ASP.NET___Daniel_Barrios
                 {
                     if (parametros != null)
                     {
-                        cmd.Parameters.AddRange(parametros);
+                        foreach (SqlParameter p in parametros)
+                        {
+                            cmd.Parameters.Add(new SqlParameter(p.ParameterName, p.Value));
+                        }
                     }
                     con.Open();
                     return cmd.ExecuteScalar();

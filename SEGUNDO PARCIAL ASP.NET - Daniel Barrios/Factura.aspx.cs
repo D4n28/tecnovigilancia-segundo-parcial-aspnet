@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -69,7 +69,8 @@ namespace SEGUNDO_PARCIAL_ASP.NET___Daniel_Barrios
                 INNER JOIN Productos PR ON D.IdProducto = PR.IdProducto
                 WHERE D.IdPedido = @idP";
 
-            DataTable dtDet = ConexionBD.EjecutarConsulta(qDet, pPed);
+            SqlParameter[] pDet = { new SqlParameter("@idP", idPedido) };
+            DataTable dtDet = ConexionBD.EjecutarConsulta(qDet, pDet);
             gvDetalleFactura.DataSource = dtDet;
             gvDetalleFactura.DataBind();
         }
