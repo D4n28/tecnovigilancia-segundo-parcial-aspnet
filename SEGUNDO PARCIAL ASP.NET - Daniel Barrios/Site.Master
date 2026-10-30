@@ -1,0 +1,180 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="SEGUNDO_PARCIAL_ASP.NET___Daniel_Barrios.SiteMaster" %>
+
+<!DOCTYPE html>
+<html lang="es">
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> - TecnoVigilancia Parque Central</title>
+
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/bundles/modernizr") %>
+    </asp:PlaceHolder>
+
+    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <style>
+        .navbar-custom {
+            background-color: #0d233a;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .hero-banner {
+            background: linear-gradient(135deg, #0d233a 0%, #1a4a75 100%);
+            color: #fff;
+            padding: 3rem 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .footer-custom {
+            background-color: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        .card-custom {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid #e2e8f0;
+        }
+        .card-custom:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+        .badge-rol {
+            font-size: 0.8rem;
+            padding: 0.35em 0.65em;
+        }
+    </style>
+</head>
+<body>
+    <form runat="server">
+        <asp:ScriptManager runat="server">
+            <Scripts>
+                <asp:ScriptReference Name="MsAjaxBundle" />
+                <asp:ScriptReference Name="jquery" />
+                <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
+                <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
+                <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
+                <asp:ScriptReference Name="GridView.js" Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js" />
+                <asp:ScriptReference Name="DetailsView.js" Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js" />
+                <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
+                <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
+                <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
+                <asp:ScriptReference Name="WebFormsBundle" />
+            </Scripts>
+        </asp:ScriptManager>
+
+        <!-- Navegación Principal -->
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
+            <div class="container">
+                <a class="navbar-brand fw-bold text-uppercase d-flex align-items-center" runat="server" href="~/">
+                    <i class="bi bi-camera-video-fill text-warning me-2 fs-4"></i>
+                    <span>TecnoVigilancia</span>
+                </a>
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarMain" title="Alternar navegación">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarMain">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Default.aspx"><i class="bi bi-house-door me-1"></i>Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Catalogo.aspx"><i class="bi bi-grid me-1"></i>Catálogo</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/ALARMAS.aspx"><i class="bi bi-shield-exclamation text-danger me-1"></i>Alarmas</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/SVC.aspx"><i class="bi bi-cctv text-primary me-1"></i>Vigilancia (SVC)</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/IMEI.aspx"><i class="bi bi-laptop text-success me-1"></i>Mantenimiento (IMEI)</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Contact.aspx"><i class="bi bi-geo-alt me-1"></i>Contacto</a></li>
+                    </ul>
+
+                    <!-- Menú de Sesión Dinámico -->
+                    <ul class="navbar-nav">
+                        <% if (Session["Usuario"] == null) { %>
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-outline-light btn-sm px-3 me-2 mb-1 mb-lg-0" runat="server" href="~/Login.aspx">
+                                    <i class="bi bi-box-arrow-in-right me-1"></i>Iniciar Sesión
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-warning text-dark btn-sm px-3 fw-bold" runat="server" href="~/Registro.aspx">
+                                    <i class="bi bi-person-plus me-1"></i>Registrarse
+                                </a>
+                            </li>
+                        <% } else { %>
+                            <% if (Session["Rol"] != null && Session["Rol"].ToString() == "Admin") { %>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-warning fw-bold" href="#" id="adminDrop" role="button" data-bs-toggle="dropdown">
+                                        <i class="bi bi-gear-fill me-1"></i>Panel Administración
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow">
+                                        <li><a class="dropdown-item" runat="server" href="~/AdminDashboard.aspx"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" runat="server" href="~/AdminEmpleados.aspx"><i class="bi bi-person-badge me-2"></i>Gestión de Empleados (CRUD)</a></li>
+                                        <li><a class="dropdown-item" runat="server" href="~/AdminClientes.aspx"><i class="bi bi-people me-2"></i>Gestión de Clientes (CRUD)</a></li>
+                                        <li><a class="dropdown-item" runat="server" href="~/AdminProductos.aspx"><i class="bi bi-box-seam me-2"></i>Gestión de Productos (CRUD)</a></li>
+                                        <li><a class="dropdown-item" runat="server" href="~/AdminPedidos.aspx"><i class="bi bi-receipt me-2"></i>Gestión de Pedidos & Facturación</a></li>
+                                    </ul>
+                                </li>
+                            <% } else { %>
+                                <li class="nav-item">
+                                    <a class="nav-link text-info fw-bold" runat="server" href="~/CrearPedido.aspx">
+                                        <i class="bi bi-cart-plus me-1"></i>Hacer Pedido
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white" runat="server" href="~/MisPedidos.aspx">
+                                        <i class="bi bi-bag-check me-1"></i>Mis Pedidos & Pagos
+                                    </a>
+                                </li>
+                            <% } %>
+                            
+                            <li class="nav-item ms-lg-2 dropdown">
+                                <a class="nav-link dropdown-toggle text-light" href="#" id="userDrop" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-person-circle me-1"></i><%= Session["Nombre"] %>
+                                    <span class="badge bg-secondary ms-1"><%= Session["Rol"] %></span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end shadow">
+                                    <li><a class="dropdown-item text-danger" runat="server" href="~/Logout.aspx"><i class="bi bi-power me-2"></i>Cerrar Sesión</a></li>
+                                </ul>
+                            </li>
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Contenido Principal -->
+        <div class="container body-content py-4">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+
+        <!-- Pie de página -->
+        <footer class="footer-custom">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-md-5">
+                        <h5 class="fw-bold text-dark"><i class="bi bi-shield-check text-primary me-2"></i>TecnoVigilancia Parque Central</h5>
+                        <p class="text-muted small mb-1">Empresa líder en comercialización e instalación de sistemas de seguridad electrónica, CCTV, ordenadores y tecnología de punta.</p>
+                        <p class="text-muted small"><i class="bi bi-geo-alt-fill text-danger me-1"></i>Parque Central, Barranquilla - Colombia</p>
+                    </div>
+                    <div class="col-md-3">
+                        <h6 class="fw-bold text-dark">Servicios</h6>
+                        <ul class="list-unstyled small">
+                            <li><a href="ALARMAS.aspx" class="text-decoration-none text-muted">Sistemas de Alarmas</a></li>
+                            <li><a href="SVC.aspx" class="text-decoration-none text-muted">Vigilancia y Control</a></li>
+                            <li><a href="IMEI.aspx" class="text-decoration-none text-muted">Mantenimiento de Equipos</a></li>
+                            <li><a href="Catalogo.aspx" class="text-decoration-none text-muted">Venta de Equipos y Accesorios</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="fw-bold text-dark">Información de Entrega</h6>
+                        <p class="text-muted small mb-1"><strong>Materia:</strong> Electiva ASP.NET - Ingeniería de Sistemas</p>
+                        <p class="text-muted small mb-1"><strong>Estudiante:</strong> Daniel Barrios</p>
+                        <p class="text-muted small">&copy; <%: DateTime.Now.Year %> - Todos los derechos reservados.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </form>
+    <script src='<%= ResolveUrl("~/Scripts/bootstrap.bundle.min.js") %>'></script>
+</body>
+</html>
